@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OnPlane — get your swing reviewed by real pros</title>
+<meta name="description" content="Post your golf swing. Get feedback from the community and a real pro's fix — for the price of a coffee. Join early access.">
+<link rel="icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1512; --ink2:#16201B; --fairway:#1F8A4C; --bone:#F2EFE6;
+    --muted:#8FA39A; --signal:#D7FB4F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased;line-height:1.5;
+       background-image:radial-gradient(120% 70% at 80% -10%, rgba(31,138,76,.22), transparent 60%);}
+  .wrap{max-width:760px;margin:0 auto;padding:64px 24px 80px}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:64px}
+  header img{width:48px;height:48px;border-radius:12px}
+  header .name{font-family:'Anton';font-size:30px;letter-spacing:.04em;text-transform:uppercase}
+  .kicker{color:var(--signal);font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:15px;margin-bottom:22px}
+  h1{font-family:'Anton';font-weight:400;text-transform:uppercase;line-height:.95;
+     font-size:clamp(44px,9vw,84px);letter-spacing:.01em}
+  h1 .hl{color:var(--signal)}
+  .sub{font-size:clamp(18px,2.6vw,22px);color:var(--bone);max-width:34ch;margin-top:26px}
+  .sub b{color:var(--signal);font-weight:800}
+  /* signup */
+  .signup{margin-top:40px;display:flex;flex-wrap:wrap;gap:12px;max-width:520px}
+  .signup input[type=email]{flex:1;min-width:220px;background:var(--ink2);border:1.5px solid #2c3a33;
+     color:var(--bone);font-size:17px;padding:16px 18px;border-radius:12px;outline:none}
+  .signup input[type=email]::placeholder{color:var(--muted)}
+  .signup input[type=email]:focus{border-color:var(--signal)}
+  .signup button{background:var(--signal);color:var(--ink);font-weight:800;font-size:17px;
+     border:0;padding:16px 28px;border-radius:12px;cursor:pointer;white-space:nowrap}
+  .signup button:hover{filter:brightness(1.05)}
+  .reassure{color:var(--muted);font-size:14px;margin-top:14px}
+  /* how it works */
+  .how{margin-top:84px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .how .step{background:var(--ink2);border:1px solid #1f2c25;border-radius:16px;padding:26px}
+  .how .n{font-family:'Anton';color:var(--fairway);font-size:34px;line-height:1}
+  .how h3{font-size:18px;margin:12px 0 8px}
+  .how p{color:var(--muted);font-size:15px}
+  footer{margin-top:80px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  @media(max-width:620px){.how{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="logo.png" alt="OnPlane">
+    <span class="name">OnPlane</span>
+  </header>
+
+  <div class="kicker">Early access</div>
+  <h1>See your swing.<br><span class="hl">Fix</span> your swing.</h1>
+  <p class="sub">Post your golf swing, get feedback from the community — and a <b>real pro's fix</b> for the price of a coffee. Be first when we open.</p>
+
+  <!-- Signup wired to MailerLite (account 2401714 · form 189203592333231468) -->
+  <form class="signup" id="signup-form"
+        action="https://assets.mailerlite.com/jsonp/2401714/forms/189203592333231468/subscribe"
+        method="post" target="ml_iframe">
+    <input type="email" name="fields[email]" placeholder="you@email.com" required autocomplete="email" aria-label="Email">
+    <input type="hidden" name="ml-submit" value="1">
+    <input type="hidden" name="anticsrf" value="true">
+    <button type="submit">Join early access →</button>
+  </form>
+  <p class="reassure" id="signup-reassure">No spam. Just one email when OnPlane opens. 🏌️</p>
+  <p id="signup-success" style="display:none;font-size:19px;color:var(--signal);font-weight:800;margin-top:18px">
+    You're on the list. 🏌️ We'll email you the moment OnPlane opens.
+  </p>
+  <iframe name="ml_iframe" style="display:none" title="signup target"></iframe>
+
+  <section class="how">
+    <div class="step"><div class="n">1</div><h3>Post your swing</h3><p>Upload a clip from the range or course in seconds.</p></div>
+    <div class="step"><div class="n">2</div><h3>Get feedback</h3><p>The community spots what's off — for free.</p></div>
+    <div class="step"><div class="n">3</div><h3>Get the fix</h3><p>Pay a real coach ~€10 for a diagnosis + a fix video.</p></div>
+  </section>
+
+  <footer>
+    <span>© OnPlane</span>
+    <span>@onplaneswing</span>
+  </footer>
+
+</div>
+<script>
+  (function(){
+    var f = document.getElementById('signup-form');
+    f.addEventListener('submit', function(){
+      if (!f.checkValidity()) return;           // let the browser flag a bad email
+      setTimeout(function(){                     // POST goes to the hidden iframe; show success
+        f.style.display = 'none';
+        document.getElementById('signup-reassure').style.display = 'none';
+        document.getElementById('signup-success').style.display = 'block';
+      }, 500);
+    });
+  })();
+</script>
+</body>
+</html>
