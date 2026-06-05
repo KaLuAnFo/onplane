@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guess the Handicap — OnPlane</title>
+<link rel="icon" href="../logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+  /* PROTOTYPE 3 — "Editorial": Swiss minimal, hairlines, type-led, one accent */
+  :root{ --bg:#FBFBF9; --ink:#111513; --green:#15743C; --muted:#6c746e; --line:#e2e3df; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:560px;margin:0 auto;padding:34px 28px 70px}
+  .bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ink);padding-bottom:14px}
+  .bar .b{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.01em;font-size:16px}
+  .bar img{width:24px;height:24px;border-radius:5px}
+  .bar .n{font-variant-numeric:tabular-nums;font-weight:600;color:var(--muted);font-size:14px}
+
+  h1{font-weight:900;letter-spacing:-.03em;line-height:.96;font-size:clamp(44px,12vw,68px);margin:34px 0 0}
+  .lead{color:var(--muted);font-size:17px;max-width:34ch;margin:14px 0 30px}
+
+  .clip{position:relative;width:100%;aspect-ratio:4/5;background:#eef0ec;border:1px solid var(--line);
+        overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .clip video{width:100%;height:100%;object-fit:cover}
+  .clip .ph{text-align:center;color:var(--muted)}
+  .clip .ph .play{font-size:36px;color:var(--green)}
+  .clip .ph small{display:block;font-size:12px;margin-top:6px}
+
+  .hint{color:var(--green);font-weight:600;font-size:15px;min-height:22px;margin:16px 0 0}
+
+  .ask{font-weight:800;font-size:20px;letter-spacing:-.01em;margin:26px 0 14px}
+  .inrow{display:flex;align-items:flex-end;gap:0;border-bottom:2px solid var(--ink);max-width:360px}
+  .inrow input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);outline:none;
+     font-weight:900;font-size:46px;letter-spacing:-.03em;padding:4px 2px}
+  .inrow input::placeholder{color:#c7cac4}
+  .inrow button{background:var(--ink);color:#fff;font-weight:800;font-size:15px;border:0;
+     padding:14px 22px;cursor:pointer;letter-spacing:.02em}
+  .range{color:var(--muted);font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
+
+  .rows{margin:26px 0 0;border-top:1px solid var(--line)}
+  .grow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;
+        padding:15px 2px;border-bottom:1px solid var(--line)}
+  .grow .g{font-weight:900;font-size:30px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:52px}
+  .grow .fb{color:var(--muted);font-size:14px}
+  .grow .em{font-size:15px;opacity:.55}
+  .grow.hit .g{color:var(--green)} .grow.hit .fb{color:var(--green);font-weight:600}
+  .grow.close .g{color:var(--ink)}
+
+  .result{display:none;margin-top:34px;border-top:2px solid var(--ink);padding-top:26px}
+  .reveal{font-weight:900;letter-spacing:-.02em;font-size:30px;line-height:1.05}
+  .reveal .num{color:var(--green)}
+  .stars{font-size:30px;letter-spacing:5px;color:var(--green);line-height:1;margin:14px 0 2px}
+  .stars .off{color:var(--line)}
+  .stars-label{color:var(--muted);font-size:13px;margin-top:2px}
+  .player{color:var(--muted);font-size:14px;margin-top:6px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:26px 0 6px;text-align:left}
+  .stat b{font-weight:900;font-size:32px;display:block;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .share{background:var(--green);color:#fff;font-weight:800;font-size:16px;border:0;padding:15px 26px;cursor:pointer;margin-top:18px}
+  .copied{color:var(--green);font-size:13px;min-height:18px;margin-top:10px}
+  .next{color:var(--muted);font-size:13px;margin-top:12px;font-variant-numeric:tabular-nums}
+
+  .cta{margin-top:44px;border-top:1px solid var(--line);padding-top:22px}
+  .cta p{font-size:20px;font-weight:800;letter-spacing:-.01em;max-width:26ch}
+  .cta a{display:inline-block;margin-top:14px;color:var(--ink);font-weight:800;text-decoration:none;
+     border-bottom:2px solid var(--green);padding-bottom:2px}
+  .cta .sub{display:block;margin-top:14px;color:var(--muted);font-size:13px}
+  footer{margin-top:40px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <span class="b"><img src="../logo.png" alt="">OnPlane</span>
+    <span class="n" id="meta">#—</span>
+  </div>
+
+  <h1>Guess the&nbsp;handicap.</h1>
+  <p class="lead">One swing. Five guesses. Read the player like a coach would.</p>
+
+  <div class="clip" id="clip"></div>
+  <div class="hint" id="hint"></div>
+
+  <div id="play">
+    <p class="ask">What's this player's handicap?</p>
+    <div class="inrow">
+      <input id="guess" type="number" inputmode="numeric" min="0" max="36" placeholder="00">
+      <button id="go">Guess</button>
+    </div>
+    <div class="range">Whole numbers 0–36 · <span id="left">5</span> guesses left</div>
+  </div>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="result" id="result">
+    <div class="reveal" id="reveal"></div>
+    <div class="stars" id="stars"></div>
+    <div class="stars-label" id="stars-label"></div>
+    <div class="player" id="who"></div>
+    <div class="stats">
+      <div class="stat"><b id="st-played">0</b><span>Played</span></div>
+      <div class="stat"><b id="st-win">0%</b><span>Win&nbsp;rate</span></div>
+      <div class="stat"><b id="st-streak">0</b><span>Streak</span></div>
+      <div class="stat"><b id="st-max">0</b><span>Best</span></div>
+    </div>
+    <button class="share" id="share">Share result</button>
+    <div class="copied" id="copied"></div>
+    <div class="next" id="next"></div>
+  </div>
+
+  <div class="cta">
+    <p>You can't see your own swing. Get a second set of eyes.</p>
+    <a href="https://www.tiktok.com/@onplaneswing" target="_blank" rel="noopener">DM your swing → @onplaneswing</a>
+    <span class="sub">Got a swing with a known handicap? DM it in for a future puzzle.</span>
+  </div>
+  <footer>© OnPlane · onplaneswing.com</footer>
+</div>
+<script src="puzzles.js"></script>
+<script src="game.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "30ef9af048ed4f96b071395fae7cece0"}'></script>
+<!-- End Cloudflare Web Analytics -->
+</body>
+</html>

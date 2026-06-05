@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guess the Handicap — OnPlane</title>
+<meta name="description" content="One swing a day. Guess the golfer's handicap. Share your streak. A daily game by OnPlane.">
+<link rel="icon" href="../logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1512; --ink2:#16201B; --fairway:#1F8A4C; --bone:#F2EFE6;
+    --muted:#8FA39A; --signal:#D7FB4F; --line:#2c3a33;
+    --hit:#1F8A4C; --close:#C9A227; --miss:#39473f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink);color:var(--bone);font-family:'Inter',system-ui,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;
+       background-image:radial-gradient(120% 60% at 50% -10%, rgba(31,138,76,.20), transparent 60%);}
+  .wrap{max-width:520px;margin:0 auto;padding:28px 20px 64px}
+  header{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:10px}
+  header img{width:34px;height:34px;border-radius:9px}
+  header .name{font-family:'Anton';font-size:22px;letter-spacing:.05em;text-transform:uppercase}
+  h1{font-family:'Anton';font-weight:400;text-transform:uppercase;text-align:center;
+     font-size:clamp(32px,9vw,44px);line-height:.96;letter-spacing:.01em;margin-top:6px}
+  h1 .hl{color:var(--signal)}
+  .meta{text-align:center;color:var(--muted);font-size:14px;margin:8px 0 20px;font-weight:600}
+
+  /* clip */
+  .clip{position:relative;width:100%;aspect-ratio:9/16;max-height:50vh;background:var(--ink2);
+        border:1.5px solid var(--line);border-radius:16px;overflow:hidden;display:flex;
+        align-items:center;justify-content:center;margin:0 auto}
+  .clip video{width:100%;height:100%;object-fit:cover}
+  .clip .ph{padding:24px;text-align:center;color:var(--muted)}
+  .clip .ph .play{font-size:42px;color:var(--fairway)}
+  .clip .ph small{display:block;margin-top:8px;font-size:13px;opacity:.8}
+
+  .hint{margin:14px 0 0;text-align:center;color:var(--signal);font-weight:600;font-size:15px;min-height:22px}
+
+  /* guess input */
+  .ask{text-align:center;font-weight:600;margin:18px 0 10px;font-size:16px}
+  .inrow{display:flex;gap:10px;max-width:340px;margin:0 auto}
+  .inrow input{flex:1;min-width:0;background:var(--ink2);border:1.5px solid var(--line);
+     color:var(--bone);font-size:22px;font-weight:800;text-align:center;padding:14px;border-radius:12px;outline:none}
+  .inrow input:focus{border-color:var(--signal)}
+  .inrow button{background:var(--signal);color:var(--ink);font-weight:800;font-size:17px;
+     border:0;padding:0 22px;border-radius:12px;cursor:pointer;white-space:nowrap}
+  .inrow button:disabled{opacity:.4;cursor:not-allowed}
+  .range{text-align:center;color:var(--muted);font-size:12px;margin-top:8px}
+
+  /* guess rows */
+  .rows{margin:18px auto 0;max-width:340px;display:flex;flex-direction:column;gap:8px}
+  .grow{display:flex;align-items:center;justify-content:space-between;gap:12px;
+        background:var(--ink2);border:1px solid var(--line);border-radius:11px;padding:11px 16px}
+  .grow.hit{border-color:var(--hit);background:rgba(31,138,76,.18)}
+  .grow.close{border-color:var(--close)}
+  .grow .g{font-weight:800;font-size:18px}
+  .grow .fb{font-size:14px;color:var(--muted);font-weight:600}
+  .grow .em{font-size:20px}
+
+  /* result */
+  .result{margin-top:22px;text-align:center;display:none}
+  .result.show{display:block}
+  .reveal{font-family:'Anton';text-transform:uppercase;font-size:clamp(26px,7vw,34px);line-height:1}
+  .reveal .num{color:var(--signal)}
+  .player{color:var(--muted);font-size:14px;margin-top:6px}
+  .stats{display:flex;justify-content:center;gap:22px;margin:20px 0 4px}
+  .stat{text-align:center}
+  .stat b{font-family:'Anton';font-size:30px;display:block;line-height:1}
+  .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .share{background:var(--signal);color:var(--ink);font-weight:800;font-size:17px;border:0;
+     padding:15px 26px;border-radius:12px;cursor:pointer;margin-top:14px}
+  .copied{color:var(--signal);font-size:13px;font-weight:600;margin-top:10px;min-height:18px}
+  .next{color:var(--muted);font-size:13px;margin-top:14px}
+
+  /* CTA */
+  .cta{margin-top:34px;background:var(--ink2);border:1px solid var(--line);border-radius:16px;
+       padding:22px;text-align:center}
+  .cta p{font-size:16px}
+  .cta b{color:var(--signal)}
+  .cta a{display:inline-block;margin-top:12px;color:var(--ink);background:var(--bone);
+     text-decoration:none;font-weight:800;padding:12px 22px;border-radius:11px}
+  .cta .sub{display:block;margin-top:14px;color:var(--muted);font-size:12px}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="../logo.png" alt="OnPlane">
+    <span class="name">OnPlane</span>
+  </header>
+  <h1>Guess the <span class="hl">Handicap</span></h1>
+  <div class="meta" id="meta">Daily #—</div>
+
+  <div class="clip" id="clip"></div>
+  <div class="hint" id="hint"></div>
+
+  <div id="play">
+    <p class="ask">What's this player's handicap?</p>
+    <div class="inrow">
+      <input id="guess" type="number" inputmode="numeric" min="0" max="36" placeholder="?">
+      <button id="go">Guess</button>
+    </div>
+    <div class="range" id="range">Whole numbers 0–36 · <span id="left">5</span> guesses left</div>
+  </div>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="result" id="result">
+    <div class="reveal" id="reveal"></div>
+    <div class="player" id="who"></div>
+    <div class="stats">
+      <div class="stat"><b id="st-played">0</b><span>played</span></div>
+      <div class="stat"><b id="st-win">0%</b><span>win&nbsp;rate</span></div>
+      <div class="stat"><b id="st-streak">0</b><span>streak</span></div>
+      <div class="stat"><b id="st-max">0</b><span>max</span></div>
+    </div>
+    <button class="share" id="share">Share result</button>
+    <div class="copied" id="copied"></div>
+    <div class="next" id="next"></div>
+  </div>
+
+  <div class="cta">
+    <p>Want to know what's <b>actually</b> costing you shots?</p>
+    <a href="https://www.tiktok.com/@onplaneswing" target="_blank" rel="noopener">DM your swing → @onplaneswing</a>
+    <span class="sub">Got a swing with a known handicap? DM it in to feature in a future puzzle.</span>
+  </div>
+
+  <footer>© OnPlane · <a href="../">onplaneswing.com</a></footer>
+</div>
+
+<script src="puzzles.js"></script>
+<script>
+(function(){
+  const KEY = "onplane-guess-v1";
+  const DAY = 86400000;
+  const launch = Date.parse(LAUNCH_DATE + "T00:00:00Z");
+  const todayUTC = (function(){ const n=new Date(); return Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()); })();
+  const dayNum = Math.max(0, Math.floor((todayUTC - launch)/DAY));   // 0-based
+  const puzzle = PUZZLES[dayNum % PUZZLES.length];
+  const num = dayNum + 1;
+
+  const $ = id => document.getElementById(id);
+  $("meta").textContent = "Daily #" + num;
+
+  // ---- clip ----
+  (function renderClip(){
+    if (puzzle.video){
+      $("clip").innerHTML = '<video src="'+puzzle.video+'" autoplay muted loop playsinline controls></video>';
+    } else {
+      $("clip").innerHTML = '<div class="ph"><div class="play">▶</div>'
+        + '<div>Swing clip goes here</div><small>(placeholder — drop an mp4 in puzzles.js)</small></div>';
+    }
+  })();
+
+  // ---- state ----
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+  let state = load();
+  if (!state.stats) state.stats = {played:0, wins:0, streak:0, max:0, lastWonDay:null};
+
+  let guesses = [];            // numbers
+  let finished = false;
+
+  function emojiFor(g){
+    const d = Math.abs(g - puzzle.handicap);
+    if (d === 0) return "🟩";
+    if (d <= 3) return "🟨";
+    return "⬜";
+  }
+  function feedback(g){
+    if (g === puzzle.handicap) return {cls:"hit", txt:"Correct!", em:"🟩"};
+    const close = Math.abs(g-puzzle.handicap) <= 3;
+    return { cls: close?"close":"", em: emojiFor(g),
+      txt: (g < puzzle.handicap ? "Too low — aim higher ⬆️" : "Too high — aim lower ⬇️") + (close?" (close!)":"") };
+  }
+  function renderRow(g){
+    const f = feedback(g);
+    const row = document.createElement("div");
+    row.className = "grow " + f.cls;
+    row.innerHTML = '<span class="g">'+g+'</span><span class="fb">'+f.txt+'</span><span class="em">'+f.em+'</span>';
+    $("rows").appendChild(row);
+  }
+
+  function finish(won){
+    finished = true;
+    $("play").style.display = "none";
+    // update stats once (guard against re-count on reload)
+    if (state.today !== dayNum){
+      const st = state.stats;
+      st.played++;
+      if (won){ st.wins++; st.streak = (st.lastWonDay === dayNum-1) ? st.streak+1 : 1; st.lastWonDay = dayNum; st.max = Math.max(st.max, st.streak); }
+      else { st.streak = 0; }
+      state.today = dayNum; state.todayGuesses = guesses; state.todayWon = won;
+      save(state);
+    }
+    // reveal
+    $("reveal").innerHTML = won
+      ? 'Nice — handicap was <span class="num">'+puzzle.handicap+'</span>'
+      : 'Handicap was <span class="num">'+puzzle.handicap+'</span>';
+    if (puzzle.player){ $("who").textContent = puzzle.player + (puzzle.credit? " · "+puzzle.credit : ""); }
+    const st = state.stats;
+    $("st-played").textContent = st.played;
+    $("st-win").textContent = (st.played? Math.round(100*st.wins/st.played):0) + "%";
+    $("st-streak").textContent = st.streak;
+    $("st-max").textContent = st.max;
+    // next puzzle countdown
+    const ms = (launch + (dayNum+1)*DAY) - Date.now();
+    const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000);
+    $("next").textContent = "Next swing in " + h + "h " + m + "m";
+    $("result").classList.add("show");
+  }
+
+  function doGuess(){
+    if (finished) return;
+    const v = parseInt($("guess").value, 10);
+    if (isNaN(v) || v < HC_MIN || v > HC_MAX){ $("guess").focus(); return; }
+    guesses.push(v);
+    renderRow(v);
+    $("guess").value = "";
+    const left = MAX_GUESSES - guesses.length;
+    $("left").textContent = left;
+    if (v === puzzle.handicap){ finish(true); return; }
+    if (left <= 0){ finish(false); return; }
+    $("guess").focus();
+  }
+
+  // ---- already played today? replay finished view ----
+  if (state.today === dayNum && Array.isArray(state.todayGuesses)){
+    guesses = state.todayGuesses.slice();
+    guesses.forEach(renderRow);
+    finish(state.todayWon);
+  }
+
+  $("go").addEventListener("click", doGuess);
+  $("guess").addEventListener("keydown", e => { if (e.key === "Enter") doGuess(); });
+
+  // ---- share ----
+  $("share").addEventListener("click", function(){
+    const grid = guesses.map(emojiFor).join("");
+    const score = state.todayWon ?? (guesses[guesses.length-1] === puzzle.handicap);
+    const line = "OnPlane ⛳ Guess the Handicap #" + num + "\n"
+      + grid + "  " + (score ? guesses.length : "X") + "/" + MAX_GUESSES + "\n"
+      + "onplaneswing.com/guess";
+    if (navigator.share){ navigator.share({text: line}).catch(()=>{}); }
+    else {
+      navigator.clipboard.writeText(line).then(()=>{ $("copied").textContent = "Copied! Paste it anywhere 📋"; },
+        ()=>{ $("copied").textContent = line; });
+    }
+  });
+})();
+</script>
+</body>
+</html>
