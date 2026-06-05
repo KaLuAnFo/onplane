@@ -7,7 +7,7 @@
 <link rel="icon" href="../logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
 <style>
-  /* PROTOTYPE 3 — "Editorial": Swiss minimal, hairlines, type-led, one accent */
+  /* "Editorial": Swiss minimal, hairlines, type-led, one accent */
   :root{ --bg:#FBFBF9; --ink:#111513; --green:#15743C; --muted:#6c746e; --line:#e2e3df; }
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.5;
@@ -19,7 +19,11 @@
   .bar .n{font-variant-numeric:tabular-nums;font-weight:600;color:var(--muted);font-size:14px}
 
   h1{font-weight:900;letter-spacing:-.03em;line-height:.96;font-size:clamp(44px,12vw,68px);margin:34px 0 0}
-  .lead{color:var(--muted);font-size:17px;max-width:34ch;margin:14px 0 30px}
+
+  .progress{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;font-weight:700;
+            text-transform:uppercase;letter-spacing:.06em;margin:26px 0 14px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block}
+  .dot.cur{background:var(--ink)} .dot.done{background:var(--green)}
 
   .clip{position:relative;width:100%;aspect-ratio:4/5;background:#eef0ec;border:1px solid var(--line);
         overflow:hidden;display:flex;align-items:center;justify-content:center}
@@ -28,7 +32,7 @@
   .clip .ph .play{font-size:36px;color:var(--green)}
   .clip .ph small{display:block;font-size:12px;margin-top:6px}
 
-  .hint{color:var(--green);font-weight:600;font-size:15px;min-height:22px;margin:16px 0 0}
+  .hint{color:var(--green);font-weight:600;font-size:15px;min-height:22px;margin:16px 0 0;display:none}
 
   .ask{font-weight:800;font-size:20px;letter-spacing:-.01em;margin:26px 0 14px}
   .inrow{display:flex;align-items:flex-end;gap:0;border-bottom:2px solid var(--ink);max-width:360px}
@@ -39,24 +43,28 @@
      padding:14px 22px;cursor:pointer;letter-spacing:.02em}
   .range{color:var(--muted);font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
 
-  .rows{margin:26px 0 0;border-top:1px solid var(--line)}
-  .grow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;
-        padding:15px 2px;border-bottom:1px solid var(--line)}
-  .grow .g{font-weight:900;font-size:30px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:52px}
-  .grow .fb{color:var(--muted);font-size:14px}
-  .grow .em{font-size:15px;opacity:.55}
-  .grow.hit .g{color:var(--green)} .grow.hit .fb{color:var(--green);font-weight:600}
-  .grow.close .g{color:var(--ink)}
-
-  .result{display:none;margin-top:34px;border-top:2px solid var(--ink);padding-top:26px}
-  .reveal{font-weight:900;letter-spacing:-.02em;font-size:30px;line-height:1.05}
+  /* per-clip reveal */
+  .clipresult{display:none;margin-top:28px;border-top:2px solid var(--ink);padding-top:24px}
+  .reveal{font-weight:900;letter-spacing:-.02em;font-size:26px;line-height:1.1}
   .reveal .num{color:var(--green)}
   .stars{font-size:30px;letter-spacing:5px;color:var(--green);line-height:1;margin:14px 0 2px}
   .stars .off{color:var(--line)}
   .stars-label{color:var(--muted);font-size:13px;margin-top:2px}
-  .player{color:var(--muted);font-size:14px;margin-top:6px}
+  .player{color:var(--muted);font-size:14px;margin-top:8px}
+  .nextbtn{background:var(--ink);color:#fff;font-weight:800;font-size:16px;border:0;
+     padding:14px 26px;cursor:pointer;margin-top:20px}
+
+  /* day summary */
+  .result{display:none;margin-top:34px;border-top:2px solid var(--ink);padding-top:26px}
+  .dayreveal{font-weight:900;letter-spacing:-.02em;font-size:30px;line-height:1.05}
+  .dayreveal .num{color:var(--green)}
+  .daygrid{margin:22px 0 6px;border-top:1px solid var(--line)}
+  .dayrow{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;border-bottom:1px solid var(--line)}
+  .dayrow .dl{font-weight:700;font-size:15px}
+  .dayrow .ds{font-size:22px;letter-spacing:4px;color:var(--green)}
+  .dayrow .ds .off{color:var(--line)}
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:26px 0 6px;text-align:left}
-  .stat b{font-weight:900;font-size:32px;display:block;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat b{font-weight:900;font-size:28px;display:block;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
   .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .share{background:var(--green);color:#fff;font-weight:800;font-size:16px;border:0;padding:15px 26px;cursor:pointer;margin-top:18px}
   .copied{color:var(--green);font-size:13px;min-height:18px;margin-top:10px}
@@ -78,7 +86,8 @@
   </div>
 
   <h1>Guess the&nbsp;handicap.</h1>
-  <p class="lead">One swing. Five guesses. Read the player like a coach would.</p>
+
+  <div class="progress" id="progress"></div>
 
   <div class="clip" id="clip"></div>
   <div class="hint" id="hint"></div>
@@ -86,34 +95,38 @@
   <div id="play">
     <p class="ask">What's this player's handicap?</p>
     <div class="inrow">
-      <input id="guess" type="number" inputmode="numeric" min="0" max="36" placeholder="00">
+      <input id="guess" type="number" inputmode="numeric" min="-10" max="54" placeholder="00">
       <button id="go">Guess</button>
     </div>
-    <div class="range">Whole numbers 0–36 · <span id="left">5</span> guesses left</div>
+    <div class="range">One guess · handicap −10 to 54</div>
   </div>
 
-  <div class="rows" id="rows"></div>
-
-  <div class="result" id="result">
+  <div class="clipresult" id="clipresult">
     <div class="reveal" id="reveal"></div>
     <div class="stars" id="stars"></div>
     <div class="stars-label" id="stars-label"></div>
     <div class="player" id="who"></div>
+    <button class="nextbtn" id="next">Next clip →</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="dayreveal" id="dayreveal"></div>
+    <div class="daygrid" id="daygrid"></div>
     <div class="stats">
-      <div class="stat"><b id="st-played">0</b><span>Played</span></div>
-      <div class="stat"><b id="st-win">0%</b><span>Win&nbsp;rate</span></div>
+      <div class="stat"><b id="st-played">0</b><span>Days</span></div>
       <div class="stat"><b id="st-streak">0</b><span>Streak</span></div>
-      <div class="stat"><b id="st-max">0</b><span>Best</span></div>
+      <div class="stat"><b id="st-max">0</b><span>Best&nbsp;day</span></div>
+      <div class="stat"><b id="st-avg">0</b><span>Avg&nbsp;⭐</span></div>
     </div>
     <button class="share" id="share">Share result</button>
     <div class="copied" id="copied"></div>
-    <div class="next" id="next"></div>
+    <div class="next" id="nexttime"></div>
   </div>
 
   <div class="cta">
     <p>You can't see your own swing. Get a second set of eyes.</p>
     <a href="https://www.tiktok.com/@onplaneswing" target="_blank" rel="noopener">DM your swing → @onplaneswing</a>
-    <span class="sub">Got a swing with a known handicap? DM it in for a future puzzle.</span>
+    <span class="sub">Got a swing with a known handicap? DM it in for a future clip.</span>
   </div>
   <footer>© OnPlane · onplaneswing.com</footer>
 </div>
