@@ -1,7 +1,7 @@
 /* OnPlane — Guess the Handicap: shared game logic (design-agnostic).
    Requires puzzles.js loaded first (PUZZLES, LAUNCH_DATE, CLIPS_PER_DAY, HC_MIN, HC_MAX).
    Mechanic: CLIPS_PER_DAY swings per day, ONE guess each, scored 0–5 stars by closeness.
-   Expected element IDs: meta, progress, clip, hint, play, guess, go,
+   Expected element IDs: meta, progress, clip, play, guess, go,
      clipmodal, closeclip, reveal, stars, stars-label, who, next,
      clipresult (inline fallback), reveal2, next2,
      result, dayreveal, daygrid, st-played, st-streak, st-max, st-avg, share, copied, nexttime. */
@@ -57,10 +57,6 @@
     const p = today[idx];
     if (p && p.video) $("clip").innerHTML = '<video src="'+p.video+'" autoplay muted loop playsinline controls></video>';
     else $("clip").innerHTML = '<div class="ph"><div class="play">▶</div><div>Swing clip goes here</div><small>(placeholder)</small></div>';
-    if ($("hint")){
-      if (p && p.hint){ $("hint").textContent = "Hint: " + p.hint; $("hint").style.display = "block"; }
-      else $("hint").style.display = "none";
-    }
     if ($("progress")) $("progress").innerHTML = progressHTML();
     $("clipresult").style.display = "none";
     if ($("clipmodal")) $("clipmodal").classList.remove("show");
@@ -118,7 +114,7 @@
       save(state);
     }
     if ($("clipmodal")) $("clipmodal").classList.remove("show");
-    ["clip","hint","play","clipresult","progress"].forEach(id => { if ($(id)) $(id).style.display = "none"; });
+    ["clip","play","clipresult","progress"].forEach(id => { if ($(id)) $(id).style.display = "none"; });
     if ($("dayreveal")) $("dayreveal").innerHTML = 'You scored <span class="num">'+total+'</span> / '+MAXTOTAL+' today';
     if ($("daygrid")) $("daygrid").innerHTML = results.map((r,i)=>
       '<div class="dayrow"><span class="dl">Clip '+(i+1)+'</span><span class="ds">'+starHTML(r.stars)+'</span></div>').join("");
