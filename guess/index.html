@@ -82,16 +82,32 @@
      padding:14px 22px;cursor:pointer;letter-spacing:.02em}
   .range{color:var(--muted);font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
 
-  /* per-clip reveal */
-  .clipresult{display:none;margin-top:28px;border-top:2px solid var(--ink);padding-top:24px}
-  .reveal{font-weight:900;letter-spacing:-.02em;font-size:26px;line-height:1.1}
-  .reveal .num{color:var(--green)}
+  /* per-clip reveal — popup */
+  .modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+     padding:22px;background:rgba(17,21,19,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+  .modal.show{display:flex;animation:fade .18s ease-out}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal-card{position:relative;width:100%;max-width:400px;background:var(--bg);border:1px solid var(--ink);
+     padding:46px 34px 34px;text-align:center;box-shadow:0 26px 70px rgba(0,0,0,.28);animation:pop .22s ease-out}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-x{position:absolute;top:10px;right:14px;background:none;border:0;font-size:30px;line-height:1;
+     color:var(--muted);cursor:pointer;padding:4px 8px}
+  .modal-x:hover{color:var(--ink)}
   .stars{font-size:30px;letter-spacing:5px;color:var(--green);line-height:1;margin:14px 0 2px}
   .stars .off{color:var(--line)}
+  .modal .stars{font-size:58px;letter-spacing:8px;margin:4px 0 6px}
   .stars-label{color:var(--muted);font-size:13px;margin-top:2px}
+  .modal .stars-label{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green)}
+  .reveal{font-weight:900;letter-spacing:-.02em;font-size:26px;line-height:1.1}
+  .reveal .num{color:var(--green)}
+  .modal .reveal{font-size:21px;margin-top:18px;font-weight:800}
   .player{color:var(--muted);font-size:14px;margin-top:8px}
   .nextbtn{background:var(--ink);color:#fff;font-weight:800;font-size:16px;border:0;
      padding:14px 26px;cursor:pointer;margin-top:20px}
+  .modal .nextbtn{width:100%;margin-top:26px}
+  /* inline fallback (only if popup dismissed) */
+  .clipresult{display:none;margin-top:24px;border-top:2px solid var(--ink);padding-top:22px}
+  .clipresult .reveal{font-size:20px}
 
   /* day summary */
   .result{display:none;margin-top:34px;border-top:2px solid var(--ink);padding-top:26px}
@@ -141,12 +157,22 @@
     <div class="range">One guess · handicap −10 to 54</div>
   </div>
 
+  <!-- per-clip reveal: popup -->
+  <div class="modal" id="clipmodal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="stars-label">
+      <button class="modal-x" id="closeclip" aria-label="Close">×</button>
+      <div class="stars" id="stars"></div>
+      <div class="stars-label" id="stars-label"></div>
+      <div class="reveal" id="reveal"></div>
+      <div class="player" id="who"></div>
+      <button class="nextbtn" id="next">Next clip →</button>
+    </div>
+  </div>
+
+  <!-- shown only if you dismiss the popup, so you can still continue -->
   <div class="clipresult" id="clipresult">
-    <div class="reveal" id="reveal"></div>
-    <div class="stars" id="stars"></div>
-    <div class="stars-label" id="stars-label"></div>
-    <div class="player" id="who"></div>
-    <button class="nextbtn" id="next">Next clip →</button>
+    <div class="reveal" id="reveal2"></div>
+    <button class="nextbtn" id="next2">Next clip →</button>
   </div>
 
   <div class="result" id="result">

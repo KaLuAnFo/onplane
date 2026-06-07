@@ -2,7 +2,8 @@
    Requires puzzles.js loaded first (PUZZLES, LAUNCH_DATE, CLIPS_PER_DAY, HC_MIN, HC_MAX).
    Mechanic: CLIPS_PER_DAY swings per day, ONE guess each, scored 0–5 stars by closeness.
    Expected element IDs: meta, progress, clip, hint, play, guess, go,
-     clipresult, reveal, stars, stars-label, who, next,
+     clipmodal, closeclip, reveal, stars, stars-label, who, next,
+     clipresult (inline fallback), reveal2, next2,
      result, dayreveal, daygrid, st-played, st-streak, st-max, st-avg, share, copied, nexttime. */
 (function(){
   const KEY = "onplane-guess-v2";              // schema bumped (multi-clip)
@@ -62,6 +63,7 @@
     }
     if ($("progress")) $("progress").innerHTML = progressHTML();
     $("clipresult").style.display = "none";
+    if ($("clipmodal")) $("clipmodal").classList.remove("show");
     $("play").style.display = "";
     $("guess").value = "";
     $("guess").focus();
@@ -69,13 +71,23 @@
 
   function showClipResult(p, g, stars){
     $("play").style.display = "none";
-    $("reveal").innerHTML = 'Handicap: <span class="num">'+p.handicap+'</span> &nbsp;·&nbsp; you said '+g;
+    const revealHTML = 'Handicap: <span class="num">'+p.handicap+'</span> &nbsp;·&nbsp; you said '+g;
+    const nextTxt = (idx+1 < CLIPS) ? "Next clip →" : "See your result →";
+    $("reveal").innerHTML = revealHTML;
+    if ($("reveal2")) $("reveal2").innerHTML = revealHTML;
     if ($("stars")) $("stars").innerHTML = starHTML(stars);
     if ($("stars-label")) $("stars-label").textContent = LABELS[stars] || LABELS[0];
     if ($("who")) $("who").textContent = p.player ? (p.player + (p.credit ? " · "+p.credit : "")) : "";
-    if ($("next")) $("next").textContent = (idx+1 < CLIPS) ? "Next clip →" : "See your result →";
-    $("clipresult").style.display = "block";
+    if ($("next")) $("next").textContent = nextTxt;
+    if ($("next2")) $("next2").textContent = nextTxt;
+    $("clipresult").style.display = "none";       // fallback hidden until popup dismissed
+    if ($("clipmodal")) $("clipmodal").classList.add("show");
     if ($("progress")) $("progress").innerHTML = progressHTML();
+  }
+
+  function dismissModal(){
+    if ($("clipmodal")) $("clipmodal").classList.remove("show");
+    $("clipresult").style.display = "block";       // reveal inline strip so you can still continue
   }
 
   function doGuess(){
@@ -105,6 +117,7 @@
       state.day = dayNum; state.results = results;
       save(state);
     }
+    if ($("clipmodal")) $("clipmodal").classList.remove("show");
     ["clip","hint","play","clipresult","progress"].forEach(id => { if ($(id)) $(id).style.display = "none"; });
     if ($("dayreveal")) $("dayreveal").innerHTML = 'You scored <span class="num">'+total+'</span> / '+MAXTOTAL+' today';
     if ($("daygrid")) $("daygrid").innerHTML = results.map((r,i)=>
@@ -125,6 +138,10 @@
   $("go").addEventListener("click", doGuess);
   $("guess").addEventListener("keydown", e => { if (e.key === "Enter") doGuess(); });
   if ($("next")) $("next").addEventListener("click", nextClip);
+  if ($("next2")) $("next2").addEventListener("click", nextClip);
+  if ($("closeclip")) $("closeclip").addEventListener("click", dismissModal);
+  if ($("clipmodal")) $("clipmodal").addEventListener("click", e => { if (e.target === $("clipmodal")) dismissModal(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && $("clipmodal") && $("clipmodal").classList.contains("show")) dismissModal(); });
 
   if ($("share")) $("share").addEventListener("click", function(){
     const total = results.reduce((a,r)=>a+r.stars, 0);
