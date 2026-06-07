@@ -3,8 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guess the Handicap — OnPlane</title>
+<title>Guess the Handicap — Daily Golf Swing Game | OnPlane</title>
+<meta name="description" content="Watch a golf swing and guess the player's handicap. A new daily game — three swings a day, one guess each. Get scored, build a streak, share your result.">
+<link rel="canonical" href="https://onplaneswing.com/guess/">
+<meta name="theme-color" content="#15743C">
 <link rel="icon" href="../logo.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OnPlane">
+<meta property="og:url" content="https://onplaneswing.com/guess/">
+<meta property="og:title" content="Guess the Handicap — Daily Golf Swing Game">
+<meta property="og:description" content="Watch a golf swing, guess the player's handicap. A new daily game — three swings, one guess each. Can you read a swing?">
+<meta property="og:image" content="https://onplaneswing.com/guess/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Guess the Handicap — Daily Golf Swing Game">
+<meta name="twitter:description" content="Watch a golf swing, guess the player's handicap. New swings daily. Can you read a swing?">
+<meta name="twitter:image" content="https://onplaneswing.com/guess/og.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Guess the Handicap",
+  "alternateName": "OnPlane — Guess the Handicap",
+  "url": "https://onplaneswing.com/guess/",
+  "description": "A free daily golf game: watch a swing and guess the player's handicap. Three swings a day, one guess each, scored with stars. Build a streak and share your result.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "inLanguage": "en",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "publisher": { "@type": "Organization", "name": "OnPlane", "url": "https://onplaneswing.com" }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
 <style>
   /* "Editorial": Swiss minimal, hairlines, type-led, one accent */
@@ -19,6 +57,7 @@
   .bar .n{font-variant-numeric:tabular-nums;font-weight:600;color:var(--muted);font-size:14px}
 
   h1{font-weight:900;letter-spacing:-.03em;line-height:.96;font-size:clamp(44px,12vw,68px);margin:34px 0 0}
+  .intro{color:var(--muted);font-size:16px;line-height:1.5;margin:14px 0 0;max-width:46ch}
 
   .progress{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;font-weight:700;
             text-transform:uppercase;letter-spacing:.06em;margin:26px 0 14px}
@@ -86,6 +125,7 @@
   </div>
 
   <h1>Guess the&nbsp;handicap.</h1>
+  <p class="intro">Watch a golf swing and guess the player's handicap. Three new swings every day — one guess each. How well can you read a swing?</p>
 
   <div class="progress" id="progress"></div>
 
