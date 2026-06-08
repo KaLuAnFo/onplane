@@ -93,7 +93,8 @@
   .modal-x:hover{color:var(--ink)}
   .stars{font-size:30px;letter-spacing:5px;color:var(--green);line-height:1;margin:14px 0 2px}
   .stars .off{color:var(--line)}
-  .modal .stars{font-size:58px;letter-spacing:8px;margin:4px 0 6px}
+  .modal .stars{font-size:clamp(38px,13vw,58px);letter-spacing:6px;margin:4px 0 6px;
+     white-space:nowrap;text-indent:6px;max-width:100%}
   .stars-label{color:var(--muted);font-size:13px;margin-top:2px}
   .modal .stars-label{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green)}
   .reveal{font-weight:900;letter-spacing:-.02em;font-size:26px;line-height:1.1}
