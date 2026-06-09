@@ -11,7 +11,7 @@
      credit   : "@handle / submitted by" — shown small on reveal (optional, get consent!)
 */
 const LAUNCH_DATE   = "2026-06-03";   // day #1 of the game (UTC)
-const CLIPS_PER_DAY = 3;              // swings shown each day
+const CLIPS_PER_DAY = 1;              // swings shown each day
 const HC_MIN = -10, HC_MAX = 54;     // guess range (-10 scratch+ … 54 beginner)
 
 const PUZZLES = [

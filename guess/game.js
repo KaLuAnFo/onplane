@@ -2,7 +2,7 @@
    Requires puzzles.js loaded first (PUZZLES, LAUNCH_DATE, CLIPS_PER_DAY, HC_MIN, HC_MAX).
    Mechanic: CLIPS_PER_DAY swings per day, ONE guess each, scored 0–5 stars by closeness.
    Expected element IDs: meta, progress, clip, play, guess, go,
-     clipmodal, closeclip, reveal, stars, stars-label, who, next,
+     clipmodal, closeclip, reveal, stars, stars-label, closeness, who, next,
      clipresult (inline fallback), reveal2, next2,
      result, dayreveal, daygrid, st-played, st-streak, st-max, st-avg, share, copied, nexttime. */
 (function(){
@@ -22,6 +22,7 @@
   for (let i=0;i<CLIPS;i++) today.push(PUZZLES[(start+i) % PUZZLES.length]);
 
   if ($("meta")) $("meta").textContent = "Daily #" + num;
+  if (CLIPS === 1 && $("progress")) $("progress").style.display = "none";  // no per-clip progress for a single daily swing
 
   function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
   function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
@@ -73,6 +74,13 @@
     if ($("reveal2")) $("reveal2").innerHTML = revealHTML;
     if ($("stars")) $("stars").innerHTML = starHTML(stars);
     if ($("stars-label")) $("stars-label").textContent = LABELS[stars] || LABELS[0];
+    const off = Math.abs(g - p.handicap);
+    if ($("closeness")){
+      $("closeness").className = "closeness" + (off === 0 ? " perfect" : "");
+      $("closeness").innerHTML = off === 0
+        ? "Spot on — you nailed it."
+        : 'Off by <span class="em">' + off + '</span> ' + (off === 1 ? "stroke" : "strokes");
+    }
     if ($("who")) $("who").textContent = p.player ? (p.player + (p.credit ? " · "+p.credit : "")) : "";
     if ($("next")) $("next").textContent = nextTxt;
     if ($("next2")) $("next2").textContent = nextTxt;
@@ -126,7 +134,7 @@
     if ($("nexttime")){
       const ms = (launch + (dayNum+1)*DAY) - Date.now();
       const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000);
-      $("nexttime").textContent = "Next " + CLIPS + " swings in " + h + "h " + m + "m";
+      $("nexttime").textContent = "Next " + (CLIPS === 1 ? "swing" : CLIPS + " swings") + " in " + h + "h " + m + "m";
     }
     $("result").style.display = "block";
   }

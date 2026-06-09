@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guess the Handicap — Daily Golf Swing Game | OnPlane</title>
-<meta name="description" content="Watch a golf swing and guess the player's handicap. A new daily game — three swings a day, one guess each. Get scored, build a streak, share your result.">
+<meta name="description" content="Watch a golf swing and guess the player's handicap. A new daily game — one swing a day, one guess. Get scored, build a streak, share your result.">
 <link rel="canonical" href="https://onplaneswing.com/guess/">
 <meta name="theme-color" content="#15743C">
 <link rel="icon" href="../logo.png">
@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="OnPlane">
 <meta property="og:url" content="https://onplaneswing.com/guess/">
 <meta property="og:title" content="Guess the Handicap — Daily Golf Swing Game">
-<meta property="og:description" content="Watch a golf swing, guess the player's handicap. A new daily game — three swings, one guess each. Can you read a swing?">
+<meta property="og:description" content="Watch a golf swing, guess the player's handicap. A new daily game — one swing a day, one guess. Can you read a swing?">
 <meta property="og:image" content="https://onplaneswing.com/guess/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -22,7 +22,7 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Guess the Handicap — Daily Golf Swing Game">
-<meta name="twitter:description" content="Watch a golf swing, guess the player's handicap. New swings daily. Can you read a swing?">
+<meta name="twitter:description" content="Watch a golf swing, guess the player's handicap. A new swing daily. Can you read a swing?">
 <meta name="twitter:image" content="https://onplaneswing.com/guess/og.png">
 
 <!-- Structured data -->
@@ -33,7 +33,7 @@
   "name": "Guess the Handicap",
   "alternateName": "OnPlane — Guess the Handicap",
   "url": "https://onplaneswing.com/guess/",
-  "description": "A free daily golf game: watch a swing and guess the player's handicap. Three swings a day, one guess each, scored with stars. Build a streak and share your result.",
+  "description": "A free daily golf game: watch a swing and guess the player's handicap. One swing a day, one guess, scored with stars. Build a streak and share your result.",
   "applicationCategory": "GameApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
@@ -96,10 +96,16 @@
   .modal .stars{font-size:clamp(38px,13vw,58px);letter-spacing:6px;margin:4px 0 6px;
      white-space:nowrap;text-indent:6px;max-width:100%}
   .stars-label{color:var(--muted);font-size:13px;margin-top:2px}
-  .modal .stars-label{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green)}
+  /* the skill label is the hero of the reveal */
+  .modal .stars-label{font-size:clamp(30px,8.5vw,40px);font-weight:900;letter-spacing:-.02em;
+     text-transform:none;color:var(--green);line-height:1.04;margin-top:10px}
+  .closeness{color:var(--muted);font-size:15px;font-weight:600;margin-top:8px}
+  .closeness .em{color:var(--ink);font-weight:800}
+  .closeness.perfect{color:var(--green);font-weight:800}
   .reveal{font-weight:900;letter-spacing:-.02em;font-size:26px;line-height:1.1}
   .reveal .num{color:var(--green)}
-  .modal .reveal{font-size:21px;margin-top:18px;font-weight:800}
+  .modal .reveal{font-size:18px;margin-top:20px;font-weight:700;color:var(--muted)}
+  .modal .reveal .num{font-weight:900}
   .player{color:var(--muted);font-size:14px;margin-top:8px}
   .nextbtn{background:var(--ink);color:#fff;font-weight:800;font-size:16px;border:0;
      padding:14px 26px;cursor:pointer;margin-top:20px}
@@ -140,7 +146,7 @@
   </div>
 
   <h1>Guess the&nbsp;handicap.</h1>
-  <p class="intro">Watch a golf swing and guess the player's handicap. Three new swings every day — one guess each. How well can you read a swing?</p>
+  <p class="intro">Watch a golf swing and guess the player's handicap. A new swing every day — one guess. How well can you read a swing?</p>
 
   <div class="progress" id="progress"></div>
 
@@ -161,6 +167,7 @@
       <button class="modal-x" id="closeclip" aria-label="Close">×</button>
       <div class="stars" id="stars"></div>
       <div class="stars-label" id="stars-label"></div>
+      <div class="closeness" id="closeness"></div>
       <div class="reveal" id="reveal"></div>
       <div class="player" id="who"></div>
       <button class="nextbtn" id="next">Next clip →</button>
