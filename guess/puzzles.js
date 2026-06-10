@@ -15,7 +15,5 @@ const CLIPS_PER_DAY = 1;              // swings shown each day
 const HC_MIN = -10, HC_MAX = 54;     // guess range (-10 scratch+ … 54 beginner)
 
 const PUZZLES = [
-  { video: "", handicap: 14, hint: "Decent tempo, slightly over the top.", player: "Sample swing", credit: "" },
-  { video: "", handicap: 6,  hint: "Compact and connected.",               player: "Sample swing", credit: "" },
-  { video: "", handicap: 24, hint: "Big slide, early extension.",          player: "Sample swing", credit: "" },
+  { id: "2sgolf-01", video: "clips/2sgolf-2026-06-10.mp4", handicap: 10, hint: "", player: "Sent by @2sgolf", credit: "" },
 ];
