@@ -74,6 +74,7 @@
     if ($("clipmodal")) $("clipmodal").classList.remove("show");
     $("play").style.display = "";
     $("guess").value = "";
+    if ($("plusToggle")) $("plusToggle").setAttribute("aria-pressed", "false");
     $("guess").focus();
   }
 
@@ -106,7 +107,10 @@
   }
 
   function doGuess(){
-    const v = parseGuess($("guess").value);
+    let v = parseGuess($("guess").value);
+    // mobile has no "+" key — the toggle marks the guess as a plus (better-than-scratch) handicap
+    if (!isNaN(v) && $("plusToggle") && $("plusToggle").getAttribute("aria-pressed") === "true")
+      v = -Math.abs(v);
     if (isNaN(v) || v < HC_MIN || v > HC_MAX){ $("guess").focus(); return; }
     const p = today[idx];
     const stars = starsFor(Math.abs(v - p.handicap));
@@ -152,6 +156,10 @@
 
   $("go").addEventListener("click", doGuess);
   $("guess").addEventListener("keydown", e => { if (e.key === "Enter") doGuess(); });
+  if ($("plusToggle")) $("plusToggle").addEventListener("click", function(){
+    this.setAttribute("aria-pressed", this.getAttribute("aria-pressed") === "true" ? "false" : "true");
+    $("guess").focus();
+  });
   if ($("next")) $("next").addEventListener("click", nextClip);
   if ($("next2")) $("next2").addEventListener("click", nextClip);
   if ($("closeclip")) $("closeclip").addEventListener("click", dismissModal);

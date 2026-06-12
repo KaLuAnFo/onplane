@@ -78,6 +78,10 @@
   .inrow input::placeholder{color:#c7cac4}
   .inrow button{background:var(--ink);color:#fff;font-weight:800;font-size:15px;border:0;
      padding:14px 22px;cursor:pointer;letter-spacing:.02em}
+  .inrow .plusbtn{flex:0 0 auto;background:transparent;color:var(--muted);border:2px solid var(--line);
+     border-radius:10px;font-weight:900;font-size:22px;line-height:1;padding:9px 13px;margin:0 10px 7px 0;
+     cursor:pointer;letter-spacing:0;transition:background .12s,color .12s,border-color .12s}
+  .inrow .plusbtn[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green)}
   .range{color:var(--muted);font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
 
   /* per-clip reveal — popup */
@@ -155,10 +159,11 @@
   <div id="play">
     <p class="ask">What's this player's handicap?</p>
     <div class="inrow">
-      <input id="guess" type="text" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="00">
+      <button id="plusToggle" type="button" class="plusbtn" aria-pressed="false" aria-label="Plus handicap — better than scratch">+</button>
+      <input id="guess" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="00">
       <button id="go">Guess</button>
     </div>
-    <div class="range">One guess · +10 to 54 · 0 = scratch, better is +</div>
+    <div class="range">One guess · 0 to 54 · better than scratch? tap <b>+</b></div>
   </div>
 
   <!-- per-clip reveal: popup -->
