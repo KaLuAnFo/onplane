@@ -15,5 +15,6 @@ const CLIPS_PER_DAY = 1;              // swings shown each day
 const HC_MIN = -10, HC_MAX = 54;     // guess range (-10 scratch+ … 54 beginner)
 
 const PUZZLES = [
-  { id: "2sgolf-01", video: "clips/2sgolf-2026-06-10.mp4", handicap: 10, hint: "", player: "Sent by @2sgolf", credit: "" },
+  { id: "2sgolf-01",        video: "clips/2sgolf-2026-06-10.mp4",        handicap: 10, hint: "", player: "@2sgolf",        credit: "" },
+  { id: "jamieclaregolf-01", video: "clips/jamieclaregolf-2026-06-12.mp4", handicap: -6, hint: "", player: "@jamieclaregolf", credit: "" },
 ];
