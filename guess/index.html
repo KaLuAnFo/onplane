@@ -155,10 +155,10 @@
   <div id="play">
     <p class="ask">What's this player's handicap?</p>
     <div class="inrow">
-      <input id="guess" type="number" inputmode="numeric" min="-10" max="54" placeholder="00">
+      <input id="guess" type="text" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="00">
       <button id="go">Guess</button>
     </div>
-    <div class="range">One guess · handicap −10 to 54</div>
+    <div class="range">One guess · +10 to 54 · 0 = scratch, better is +</div>
   </div>
 
   <!-- per-clip reveal: popup -->

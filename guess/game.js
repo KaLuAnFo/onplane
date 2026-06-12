@@ -35,6 +35,17 @@
 
   const LABELS = ["Way off","Cold read","Getting there","Solid read","Sharp eye","Bang on — pro eyes"];
 
+  // Golf convention: better-than-scratch is a "plus" handicap, written +6 (stored as -6 internally).
+  // 0 is scratch; worse handicaps are plain positive numbers.
+  function fmtHC(n){ return n < 0 ? "+" + (-n) : (n === 0 ? "scratch" : "" + n); }
+  // Accept "+6" (plus handicap → internal -6), plain "6", and lenient "-6" (also a plus).
+  function parseGuess(raw){
+    raw = String(raw).trim();
+    if (!raw) return NaN;
+    if (raw[0] === "+") return -parseInt(raw.slice(1), 10);
+    return parseInt(raw, 10);
+  }
+
   function starsFor(off){
     if (off === 0)  return 5;   // exact
     if (off <= 2)   return 4;   // 1–2 off
@@ -68,7 +79,7 @@
 
   function showClipResult(p, g, stars){
     $("play").style.display = "none";
-    const revealHTML = 'Handicap: <span class="num">'+p.handicap+'</span> &nbsp;·&nbsp; you said '+g;
+    const revealHTML = 'Handicap: <span class="num">'+fmtHC(p.handicap)+'</span> &nbsp;·&nbsp; you said '+fmtHC(g);
     const nextTxt = (idx+1 < CLIPS) ? "Next clip →" : "See your result →";
     $("reveal").innerHTML = revealHTML;
     if ($("reveal2")) $("reveal2").innerHTML = revealHTML;
@@ -95,7 +106,7 @@
   }
 
   function doGuess(){
-    const v = parseInt($("guess").value, 10);
+    const v = parseGuess($("guess").value);
     if (isNaN(v) || v < HC_MIN || v > HC_MAX){ $("guess").focus(); return; }
     const p = today[idx];
     const stars = starsFor(Math.abs(v - p.handicap));
